@@ -8,18 +8,39 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class SecondViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var taskTextField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func addTask(_ sender: Any) {
+        let tasksObject = UserDefaults.standard.object(forKey: "tasks")
+        
+        var tasks:[String]
+        if let temptask = tasksObject as? [String] {
+            tasks = temptask
+            tasks.append(taskTextField.text!)
+        } else {
+            tasks = [taskTextField.text!]
+        }
+        
+        UserDefaults.standard.set(tasks, forKey: "tasks")
+        taskTextField.text = ""
+        
     }
-
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 
 }
 
